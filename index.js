@@ -1,16 +1,19 @@
 const express = require('express')
 const path = require('path')
 const bodyParser = require('body-parser');
+// const Users = require('./Users');
 const app = express();
+app.use(express.json())
 const PORT = 4000;
 app.use(bodyParser.urlencoded({extended:true}));
+
 app.listen(PORT,(req,res)=>{
     console.log('server is running at PORT', PORT)
 })
-let users =[
-    {name:'Faiza',id:1, email:'faz.pak@gmail.com',password:'12345'},
-    {name:'Kulsoom',id:1, email:'Kusloom@gmail.com',password:'11111'}
-]
+// let users =[
+//     {name:'Faiza',id:1, email:'faz.pak@gmail.com',password:'12345'},
+//     {name:'Kulsoom',id:1, email:'Kusloom@gmail.com',password:'11111'}
+// ]
 // app.get('/',(req,res)=>{
 //     // res.send('<h1>My first App</h1>')
 //     res.sendFile(path.join(__dirname,'public','index.html'))
@@ -31,6 +34,18 @@ app.get('/signup',(req,res)=>{
 app.get('/signin',(req,res)=>{
     res.sendFile(path.join(__dirname,'registration','signin.html'))
 })
+// console.log(users)
+app.get('/api/users',(req,res)=>{
+    // res.json(Users)
+})
+app.get('/api/users/:id',(req,res)=>{
+    let id =parseInt(req.params.id)
+    console.log(id)
+    let result= Users.filter((item)=>item.id==id)
+    res.json(result[0])
+})
+
+
 app.post('/signup',(req,res)=>{
     //  res.send(req.body)
 let {name,email,password}= req.body
@@ -58,3 +73,5 @@ app.post('/signin',(req,res)=>{
         res.redirect('/signin')
     }
 })
+
+app.use('/api/users', require('./routes/Api/users'))
